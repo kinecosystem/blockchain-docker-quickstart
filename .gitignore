@@ -1,0 +1,3 @@
+# Ignore compiled binaries generated during the build
+horizon
+stellar-core

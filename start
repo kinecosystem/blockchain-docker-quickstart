@@ -225,7 +225,7 @@ function init_stellar_core() {
 	# override the catchup:
 	cp /opt/stellar/core/etc/stellar-core.cfg /opt/stellar/core/etc/stellar-core.cfg.tmpl
 	envsubst '$CATCHUP_RECENT_NUM' < /opt/stellar/core/etc/stellar-core.cfg.tmpl > /opt/stellar/core/etc/stellar-core.cfg
-	
+
 	if [ -f $COREHOME/.quickstart-initialized ]; then
 		echo "core: already initialized"
 
@@ -262,10 +262,18 @@ function init_horizon() {
 	pushd $HZHOME
 
 	run_silent "chown-horizon" chown stellar:stellar .
-	
+
+	if [ -n "$HORIZON_HOURLY_RATE_LIMIT" ]; then
+		PER_HOUR_RATE_LIMIT=$HORIZON_HOURLY_RATE_LIMIT
+		echo "using HORIZON_HOURLY_RATE_LIMIT"
+	else
+		PER_HOUR_RATE_LIMIT="72000"
+	fi
+
 	sed -ri \
 		-e "s/__PGPASS__/$PGPASS/g" \
 		-e "s/__NETWORK__/$NETWORK_PASSPHRASE/g" \
+		-e "s/__HOURLY_LIMIT__/$PER_HOUR_RATE_LIMIT/g" \
 		etc/horizon.env
 
 	start_postgres
