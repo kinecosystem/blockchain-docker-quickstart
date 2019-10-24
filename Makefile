@@ -1,4 +1,4 @@
-__PHONY__: build build-testing
+__PHONY__: build
 
 CORE_VERSION := kinecosystem-v2.1.0-stellar-v9.2.0
 HORIZON_VERSION := v2.1.0
@@ -15,6 +15,3 @@ horizon-binary:
 
 build: core-binary horizon-binary
 	docker build -t kinecosystem/blockchain-quickstart -f Dockerfile .
-
-build-testing: core-binary horizon-binary
-	docker build -t kinecosystem/blockchain-quickstart:testing -f Dockerfile.testing .
